@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package inventory.v1;
+
+// Synchronous API used by the order-service (and exposed through GraphQL).
+service InventoryService {
+  rpc ListProducts (ListProductsRequest) returns (ListProductsResponse);
+  rpc CheckStock (CheckStockRequest) returns (CheckStockResponse);
+}
+
+message Product {
+  string sku = 1;
+  string name = 2;
+  int32 stock = 3;
+  int32 unit_price_cents = 4;
+}
+
+message ListProductsRequest {}
+message ListProductsResponse { repeated Product products = 1; }
+
+message StockItem {
+  string sku = 1;
+  int32 quantity = 2;
+}
+
+message CheckStockRequest { repeated StockItem items = 1; }
+
+message StockCheckResult {
+  string sku = 1;
+  bool available = 2;
+  int32 unit_price_cents = 3;
+}
+
+message CheckStockResponse {
+  bool all_available = 1;
+  repeated StockCheckResult results = 2;
+}
